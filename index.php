@@ -61,18 +61,22 @@ function x() {
 </script>
 <?php
 
-use chillerlan\QRCode\{QRCode, QROptions};
 require_once __DIR__ . "/vendor/autoload.php";
+
+use Metzli\Encoder\Encoder;
+use Metzli\Renderer\PngRenderer;
 
 if (isset($_REQUEST["id"])) {
     $id = $_REQUEST["id"];
     if (! preg_match("/^tr_\\w+\z/", $id)) die("Nope");
-    #$payment = $mollie->payments->get($id);
-    $options = new QROptions(['imageTransparent' => false]);
+
+    $renderer = new PngRenderer(3, array(0,0,0), array(0,255,0));
+    $base64 = base64_encode($renderer->render(Encoder::encode($id)));
+
     ?>
 	<h1>Step 3</h1>
         In RevBank, scan 
-        <?php echo '<img src="' . (new QRCode($options))->render($id) . '" alt="QR Code" align=middle>'; ?>
+        <?php echo '<img src="data:image/png;base64,' . $base64 . '" alt="Aztec code" align=middle>'; ?>
         (or type <tt><?php echo $id; ?></tt>) and then enter your account name to complete your deposit.
 	<p>
 	This code can be used only once. If you can't scan it right now, bookmark/save/screenshot this page and finish this step within 3 days.
@@ -95,7 +99,7 @@ if (isset($_REQUEST["id"])) {
 ?>
 
 <h1>Deposit</h1>
-Here, you can buy a QR code that you can scan to add money to your RevBank account.
+Here, you can buy an Aztec barcode that you can scan to add money to your RevBank account.
 <form method=post action=mollie.php>
 Amount: <input id=custom type=text size=6 maxlength=6 style="width:6ch" name=amount pattern="(?:[0-9]+(?:[,.][0-9]{2})?)?" title="42 or 42.00 or 42,00" onkeyup="return ch(this)"> <input type=submit value=ok><br>
 <div id=insufficient>Note: the minimum amount is 13.37 because of transaction fees that we can't (legally) pass on to you.</div>

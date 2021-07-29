@@ -1,6 +1,6 @@
 {
     "require": {
         "mollie/mollie-api-php": "^2.0",
-        "chillerlan/php-qrcode": "^3.4"
+        "z38/metzli": "^1.1"
     }
 }
