@@ -96,12 +96,15 @@ if (isset($_REQUEST["id"])) {
 
 } else {
 
+    $prefill = isset($_GET["prefill"]) ? $_GET["prefill"] : "";
+    if (! preg_match("/^(?:[0-9]+(?:[,.][0-9]{2})?)?\\z/", $prefill)) die("Invalid amount");
+
 ?>
 
 <h1>Deposit</h1>
 Here, you can buy an Aztec barcode that you can scan to add money to your RevBank account.
 <form method=post action=mollie.php>
-Amount: <input id=custom type=text size=6 maxlength=6 style="width:6ch" name=amount pattern="(?:[0-9]+(?:[,.][0-9]{2})?)?" title="42 or 42.00 or 42,00" onkeyup="return ch(this)"> <input type=submit value=ok><br>
+Amount: <input id=custom type=text size=6 maxlength=6 style="width:6ch" name=amount pattern="(?:[0-9]+(?:[,.][0-9]{2})?)?" title="42 or 42.00 or 42,00" onkeyup="return ch(this)" value="<?php echo($prefill); ?>"> <input type=submit value=ok><br>
 <div id=insufficient>Note: the minimum amount is 13.37 because of transaction fees that we can't (legally) pass on to you.</div>
 <p>
 Or pick a preset:<br>
