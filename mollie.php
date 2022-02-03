@@ -16,9 +16,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $id = $_POST["id"];
         if (! preg_match("/^tr_\\w+\\z/", $id)) die("Nope");
-
-        $payment = $mollie->payments->get($id);
         header("Content-Type: application/json; charset=US-ASCII");
+
+        try {
+            $payment = $mollie->payments->get($id);
+        } catch (\Mollie\Api\Exceptions\ApiException $e) {
+            print json_encode(["ok" => false, "message" => (
+                $e->getCode() == 404 ? "not found" : "API communication error"
+            )]);
+            exit();
+        }
 
         if (! $payment->isPaid()) {
             print json_encode(["ok" => false, "message" => "payment " . $payment->status]);
