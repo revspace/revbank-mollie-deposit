@@ -52,7 +52,7 @@ footer a { text-decoration: none }
 footer a:hover { text-decoration: underline }
 </style>
 <script>
-fsunction ch(e) {
+function ch(e) {
     document.getElementById("exceeded").style.visibility = e.value && e.value > 150 ? "visible" : "hidden";
     document.getElementById("insufficient").style.visibility = e.value && e.value < 13.37 ? "visible" : "hidden";
     return true;
