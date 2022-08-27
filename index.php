@@ -33,13 +33,14 @@ input[type="text"] {
     border: 0;
     border-bottom: 2px solid lime;
 }
-#insufficient {
+#insufficient, #exceeded {
     color: black;
     background: lime;
     visibility: hidden;
     line-height: 200%;
     padding: 1ex;
     display: inline-block;
+    position: absolute;
 }
 footer {
     margin-top: 4em;
@@ -52,6 +53,7 @@ footer a:hover { text-decoration: underline }
 </style>
 <script>
 function ch(e) {
+    document.getElementById("exceeded").style.visibility = e.value && e.value > 150 ? "visible" : "hidden";
     document.getElementById("insufficient").style.visibility = e.value && e.value < 13.37 ? "visible" : "hidden";
     return true;
 }
@@ -106,7 +108,9 @@ Here, you can buy an Aztec barcode that you can scan to add money to your RevBan
 <form method=post action=mollie.php>
 Amount: <input id=custom type=text size=6 maxlength=6 style="width:6ch" name=amount pattern="(?:[0-9]+(?:[,.][0-9]{2})?)?" title="42 or 42.00 or 42,00" onkeyup="return ch(this)" value="<?php echo($prefill); ?>"> <input type=submit value=ok><br>
 <div id=insufficient>Note: the minimum amount is 13.37 because of transaction fees that we can't (legally) pass on to you.</div>
+<div id=exceeded>Note: the maximum amount is 150.</div>
 <p>
+<br><br>
 Or pick a preset:<br>
 <input type=submit name=amount value=13.37 onclick="return x()">
 <input type=submit name=amount value=19.84 onclick="return x()">
