@@ -4,6 +4,7 @@
 <meta name=robots content=noindex,nofollow>
 <title>RevBank Deposit</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<?php include("config.php"); ?>
 <style>
 body, a {
     background: black;
@@ -53,8 +54,8 @@ footer a:hover { text-decoration: underline }
 </style>
 <script>
 function ch(e) {
-    document.getElementById("exceeded").style.visibility = e.value && e.value > 150 ? "visible" : "hidden";
-    document.getElementById("insufficient").style.visibility = e.value && e.value < 13.37 ? "visible" : "hidden";
+    document.getElementById("exceeded").style.visibility = e.value && e.value > <?php print($limit_max); ?> ? "visible" : "hidden";
+    document.getElementById("insufficient").style.visibility = e.value && e.value < <?php print($limit_min); ?> ? "visible" : "hidden";
     return true;
 }
 function x() {
@@ -106,9 +107,9 @@ if (isset($_REQUEST["id"])) {
 <h1>Deposit</h1>
 Here, you can buy an Aztec barcode that you can scan to add money to your RevBank account.
 <form method=post action=mollie.php>
-Amount: <input id=custom type=text size=6 maxlength=6 style="width:6ch" name=amount pattern="(?:[0-9]+(?:[,.][0-9]{2})?)?" title="42 or 42.00 or 42,00" onkeyup="return ch(this)" value="<?php echo($prefill); ?>"> <input type=submit value=ok><br>
-<div id=insufficient>Note: the minimum amount is 13.37 because of transaction fees that we can't (legally) pass on to you.</div>
-<div id=exceeded>Note: the maximum amount is 150.</div>
+Amount: <input id=custom type=text size=6 maxlength=21 style="width:6ch" name=amount pattern="(?:[0-9]+(?:[,.][0-9]{2})?)?(?:!\w+)?" title="42 or 42.00 or 42,00" onkeyup="return ch(this)" value="<?php echo($prefill); ?>"> <input type=submit value=ok><br>
+<div id=insufficient>Note: the minimum amount is <?php print($limit_min); ?> because of transaction fees that we can't (legally) pass on to you.</div>
+<div id=exceeded>Note: the maximum amount is <?php print($limit_max); ?>.</div>
 <p>
 <br><br>
 Or pick a preset:<br>

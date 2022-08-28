@@ -79,12 +79,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	// client is user
 
         $amount = $_POST["amount"];
+        $ignore_limits = preg_match("/!$limit_backdoor$/", $amount);
+        if ($ignore_limits) {
+            $amount = preg_replace("/!$limit_backdoor$/", "", $amount);
+        }
+
         if (! preg_match("/^[0-9]+(?:[,.][0-9]{2})?\\z/", $amount)) die("Invalid amount");
         $amount = preg_replace("/,/", ".", $amount);
         if (! preg_match("/\\./", $amount)) $amount .= ".00";
-    
-        if ($amount < 13.37) die("Minimum 13.37");
-        if ($amount > 150) die("Maximum 150.00");
+  
+        if (!$ignore_limits) {
+            if ($amount < $limit_min) die("Minimum $limit_min");
+            if ($amount > $limit_max) die("Maximum $limit_max");
+        }
     
         $payment = $mollie->payments->create([
             "amount" => [ "value" => $amount, "currency" => "EUR" ],
